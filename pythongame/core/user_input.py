@@ -110,6 +110,8 @@ class PlayingUserInputHandler:
     def get_actions(self, events) -> List[Any]:
         actions = []
         for event in events:
+            if event.type == pygame.WINDOWFOCUSLOST:
+                self.forget_held_down_keys()
             if event.type == pygame.KEYDOWN:
                 if event.key in PYGAME_MOVEMENT_KEYS:
                     if event.key in self._movement_keys_down:

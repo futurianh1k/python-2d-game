@@ -1,3 +1,4 @@
+import logging
 import random
 import sys
 from pathlib import Path
@@ -30,6 +31,7 @@ from pythongame.register_game_data import register_all_game_data
 from pythongame.resources import resource_path
 
 MAP_DIR = "resources/maps/"
+logger = logging.getLogger(__name__)
 
 register_all_game_data()
 
@@ -89,7 +91,7 @@ class MapEditor:
         self.game_state: GameState = None
 
         if Path(self.map_file_path).exists():
-            print("Loading map '%s' from file." % self.map_file_path)
+            logger.info("Loading map: %s", self.map_file_path)
             map_data = load_map_from_json_file(self.map_file_path)
             player_position = map_data.player_position
             self._set_game_world(map_data.game_world, player_position)
@@ -261,11 +263,11 @@ class MapEditor:
         self.ui_view.update_wall_positions(wall_positions)
 
     def save(self):
-        grid_string = self.grid.serialize()
+        grid_string = self.grid.serialize() if self.grid is not None else None
         game_world = self.game_state.game_world
         map_data = MapData(game_world, self.config, grid_string, game_world.player_entity.get_position())
         save_map_to_json_file(map_data, self.map_file_path)
-        print("Saved state to " + self.map_file_path)
+        logger.info("Saved map: %s", self.map_file_path)
 
     def _handle_action(self, action: MapEditorAction, grid_cell_size: int):
         if isinstance(action, GenerateRandomMap):
@@ -481,6 +483,7 @@ def main(map_file_name: Optional[str]):
         MapEditor(map_file_name)
     finally:
         pygame.quit()
+        logger.info("Map editor stopped")
 
 
 # TODO Convert these functions to methods

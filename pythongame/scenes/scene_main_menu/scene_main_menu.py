@@ -1,3 +1,4 @@
+import logging
 from typing import List, Any, Optional
 
 import pygame
@@ -10,6 +11,7 @@ from pythongame.scenes.scene_factory import AbstractSceneFactory
 from pythongame.scenes.scene_main_menu.view_main_menu import MainMenuView, NUM_SHOWN_SAVE_FILES
 
 COLOR_BLACK = (0, 0, 0)
+logger = logging.getLogger(__name__)
 
 
 class MainMenuScene(AbstractScene):
@@ -22,10 +24,16 @@ class MainMenuScene(AbstractScene):
         self._first_shown_option_index = 0
         self.scene_factory = scene_factory
         self.flags = flags
-        self._files = save_file_handler.list_save_files()
-        self._files.sort(key=lambda file: int(file.split(".")[0]))
-        self._saved_characters: List[SavedPlayerState] = [
-            save_file_handler.load_player_state_from_json_file(file) for file in self._files]
+        self._files = []
+        self._saved_characters: List[SavedPlayerState] = []
+        for filename in save_file_handler.list_save_files():
+            try:
+                saved = save_file_handler.load_player_state_from_json_file(filename)
+            except (OSError, ValueError):
+                logger.warning("Skipping unreadable save: %s", filename)
+                continue
+            self._files.append(filename)
+            self._saved_characters.append(saved)
         self._view = view
 
     def handle_user_input(self, events: List[Any]):

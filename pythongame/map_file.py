@@ -1,5 +1,3 @@
-import json
-
 from pygame.rect import Rect
 
 from pythongame.core.common import *
@@ -11,6 +9,7 @@ from pythongame.core.game_state import NonPlayerCharacter, Wall, Portal, Decorat
     MoneyPileOnGround, ItemOnGround, ConsumableOnGround, Chest, Shrine, DungeonEntrance, GameWorldState
 from pythongame.core.world_entity import WorldEntity
 from pythongame.resources import resource_path
+from pythongame.json_files import read_json, write_json_atomic
 
 
 class MapEditorConfig:
@@ -31,9 +30,7 @@ class MapData:
 
 
 def load_map_from_json_file(map_file_path: str) -> MapData:
-    with resource_path(map_file_path).open(encoding="utf-8") as map_file:
-        json_data = json.load(map_file)
-        return create_map_from_json(json_data)
+    return create_map_from_json(read_json(resource_path(map_file_path)))
 
 
 def create_map_from_json(json_data) -> MapData:
@@ -46,8 +43,7 @@ def save_map_to_json_file(map_data: MapData, map_file: str):
 
 
 def write_json_to_file(json_data, map_file: str):
-    with resource_path(map_file).open('w', encoding="utf-8") as map_file:
-        json.dump(json_data, map_file, indent=2)
+    write_json_atomic(resource_path(map_file), json_data)
 
 
 class MapJson:

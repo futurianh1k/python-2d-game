@@ -50,7 +50,7 @@ class StartingProgramScene(AbstractScene):
                     saved_player_state=saved_player_state,
                     hero_start_level=None,
                     start_money=None,
-                    character_file=None)
+                    character_file=self.cmd_flags.save_file_name)
                 return SceneTransition(self.scene_factory.creating_world_scene(flags))
 
             if self.cmd_flags.chosen_hero_id:

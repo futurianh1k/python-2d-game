@@ -1,3 +1,4 @@
+import logging
 import sys
 from typing import Optional, List, Any, Tuple, Callable
 
@@ -7,7 +8,7 @@ from pythongame.core.common import Millis, SceneTransition, AbstractScene, Abstr
 from pythongame.core.game_data import ENTITY_SPRITE_INITIALIZERS, \
     UI_ICON_SPRITE_PATHS, PORTRAIT_ICON_SPRITE_PATHS
 from pythongame.core.game_state import GameState
-from pythongame.core.sound_player import init_sound_player
+from pythongame.core.sound_player import init_sound_player, shutdown_sound_player
 from pythongame.core.view.game_world_view import GameWorldView
 from pythongame.core.view.image_loading import load_images_by_sprite, \
     load_images_by_ui_sprite, load_images_by_portrait_sprite
@@ -31,6 +32,7 @@ from pythongame.scenes.scenes_game.scene_playing import PlayingScene
 ABILITY_KEY_LABELS = ["Q", "W", "E", "R", "T"]
 SCREEN_SIZE = (800, 600)  # If this is not a supported resolution, performance takes a big hit
 CAMERA_SIZE = (800, 430)
+logger = logging.getLogger(__name__)
 
 register_all_game_data()
 
@@ -92,7 +94,8 @@ class Main:
 
         pygame.init()
 
-        print("Available display modes: " + str(pygame.display.list_modes()))
+        logger.info("Starting game: Python %s, pygame %s", sys.version.split()[0], pygame.version.ver)
+        logger.debug("Available display modes: %s", pygame.display.list_modes())
 
         self.fullscreen = fullscreen
         self.pygame_screen = self.setup_screen()
@@ -117,14 +120,20 @@ class Main:
     def main_loop(self):
         try:
             self._main_loop()
-        except Exception as e:
-            print("Game crashed with an unexpected error! %s" % e)
-            if hasattr(self.scene, 'game_state'):
-                game_state: GameState = getattr(self.scene, 'game_state', None)
-                print("Saving character to file as backup...")
-                self.save_file_handler.save_to_file(game_state.player_state, None, Millis(0))
+        except Exception:
+            logger.exception("Game crashed with an unexpected error")
+            game_state = getattr(self.scene, 'game_state', None)
+            if game_state is not None:
+                try:
+                    filename = self.save_file_handler.save_to_file(
+                        game_state.player_state, None,
+                        getattr(self.scene, 'total_time_played_on_character', Millis(0)),
+                    )
+                    logger.info("Crash backup saved: %s", filename)
+                except Exception:
+                    logger.exception("Crash backup failed; preserving the original game error")
             else:
-                print("Failed to save character to file as backup!")
+                logger.warning("Crash backup unavailable: no active character")
             raise
 
     def _main_loop(self):
@@ -179,4 +188,6 @@ def start(map_file_name: Optional[str], chosen_hero_id: Optional[str], hero_star
         main = Main(map_file_name, chosen_hero_id, hero_start_level, start_money, save_file_name, fullscreen)
         main.main_loop()
     finally:
+        shutdown_sound_player()
         pygame.quit()
+        logger.info("Game stopped")

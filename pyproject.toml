@@ -1,0 +1,23 @@
+[tool.pytest.ini_options]
+minversion = "9.0"
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra --strict-markers --strict-config"
+filterwarnings = ["error"]
+markers = [
+    "unit: isolated logic, persistence, and logging contracts",
+    "integration: real pygame assets, scenes, and file round trips",
+    "process: CLI checks in a fresh Python process",
+]
+log_format = "%(levelname)s %(name)s: %(message)s"
+
+[tool.coverage.run]
+branch = true
+source = ["pythongame", "run", "map_editor"]
+
+[tool.coverage.report]
+show_missing = true
+precision = 2
+
+[tool.coverage.html]
+directory = "artifacts/coverage-html"

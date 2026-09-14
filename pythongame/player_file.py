@@ -1,9 +1,17 @@
-import json
-import os
+import logging
+from pathlib import Path
 from typing import Dict, List, Optional
 
-from pythongame.core.common import Millis
+from pythongame.core.common import Millis, HeroId, ConsumableType, PortalId, Sprite
 from pythongame.core.game_state import PlayerState
+from pythongame.core.quests import QuestId
+from pythongame.json_files import read_json, write_json_atomic
+
+logger = logging.getLogger(__name__)
+
+
+class SaveFileError(ValueError):
+    """A save does not match the supported JSON structure."""
 
 
 class SavedPlayerState:
@@ -42,6 +50,7 @@ class PlayerStateJson:
 
     @staticmethod
     def deserialize(data) -> SavedPlayerState:
+        PlayerStateJson.validate(data)
         return SavedPlayerState(
             data["hero"],
             data["level"],
@@ -56,24 +65,83 @@ class PlayerStateJson:
             data.get("completed_quests", []),
         )
 
+    @staticmethod
+    def validate(data):
+        if not isinstance(data, dict):
+            raise SaveFileError("Save must be a JSON object")
+        required = {"hero", "level", "exp", "consumables", "items", "money", "enabled_portals"}
+        if not required <= data.keys():
+            raise SaveFileError("Save is missing required fields")
+        if not isinstance(data["hero"], str) or data["hero"] not in HeroId.__members__:
+            raise SaveFileError("Invalid hero")
+        for field, minimum in (("level", 1), ("exp", 0), ("money", 0), ("total_time_played", 0)):
+            value = data.get(field, 0)
+            if type(value) is not int or value < minimum:
+                raise SaveFileError(f"Invalid {field}: expected an integer >= {minimum}")
+        consumables = data["consumables"]
+        if not isinstance(consumables, dict):
+            raise SaveFileError("Invalid consumables")
+        for slot, values in consumables.items():
+            if slot not in {"1", "2", "3", "4", "5"}:
+                raise SaveFileError("Invalid consumable slot")
+            PlayerStateJson._validate_enum_list(values, ConsumableType, "consumables")
+        items = data["items"]
+        if not isinstance(items, list) or any(
+            item is not None and (not isinstance(item, list) or len(item) != 2
+                                 or not all(isinstance(part, str) for part in item))
+            for item in items
+        ):
+            raise SaveFileError("Invalid items")
+        portals = data["enabled_portals"]
+        if not isinstance(portals, dict) or any(
+            key not in PortalId.__members__ or not isinstance(value, str) or value not in Sprite.__members__
+            for key, value in portals.items()
+        ):
+            raise SaveFileError("Invalid enabled_portals")
+        talents = data.get("talents", [])
+        if not isinstance(talents, list) or any(
+            value is not None and (type(value) is not int or value < 0) for value in talents
+        ):
+            raise SaveFileError("Invalid talents")
+        for field in ("active_quests", "completed_quests"):
+            PlayerStateJson._validate_enum_list(data.get(field, []), QuestId, field)
+
+    @staticmethod
+    def _validate_enum_list(values, enum_type, field):
+        if not isinstance(values, list) or any(
+            not isinstance(value, str) or value not in enum_type.__members__ for value in values
+        ):
+            raise SaveFileError(f"Invalid {field}")
+
 
 class SaveFileHandler:
 
-    def __init__(self):
-        self.directory = "saved_characters"
-        if not os.path.exists(self.directory):
-            print("Save directory not found. Creating new directory: " + self.directory)
-            os.makedirs(self.directory)
+    def __init__(self, directory: str | Path = "saved_characters"):
+        self.directory = Path(directory)
+        self.directory.mkdir(parents=True, exist_ok=True)
+
+    def _path(self, filename: str) -> Path:
+        if not filename or "/" in filename or "\\" in filename or Path(filename).is_absolute() \
+                or Path(filename).suffix != ".json":
+            raise SaveFileError("Save filename must be a .json basename")
+        path = self.directory / filename
+        if path.is_symlink():
+            raise SaveFileError("Save file must not be a symbolic link")
+        return path
 
     def load_player_state_from_json_file(self, filename: str) -> SavedPlayerState:
-        with open(self.directory + "/" + filename, encoding="utf-8") as file:
-            json_data = json.load(file)
+        path = self._path(filename)
+        json_data = read_json(path)
+        try:
             return PlayerStateJson.deserialize(json_data)
+        except SaveFileError:
+            logger.exception("Invalid save structure: %s", path)
+            raise
 
     def _save_player_state_to_json_file(self, player_state: SavedPlayerState, filename: str):
         json_data = PlayerStateJson.serialize(player_state)
-        with open(self.directory + "/" + filename, 'w', encoding="utf-8") as file:
-            json.dump(json_data, file, indent=2)
+        PlayerStateJson.validate(json_data)
+        write_json_atomic(self._path(filename), json_data)
 
     def save_to_file(self, player_state: PlayerState, existing_save_file: Optional[str],
                      total_time_played_on_character: Millis) -> str:
@@ -85,7 +153,7 @@ class SaveFileHandler:
             hero_id=player_state.hero_id.name,
             level=player_state.level,
             exp=player_state.exp,
-            consumables_in_slots={slot_number: [c.name for c in consumables] for (slot_number, consumables)
+            consumables_in_slots={str(slot_number): [c.name for c in consumables] for (slot_number, consumables)
                                   in player_state.consumable_inventory.consumables_in_slots.items()},
             items=[[slot.get_item_id().stats_string, slot.get_item_id().name] if not slot.is_empty() else None
                    for slot in player_state.item_inventory.slots],
@@ -98,18 +166,17 @@ class SaveFileHandler:
             completed_quests=[q.quest_id.name for q in player_state.completed_quests]
         )
         self._save_player_state_to_json_file(saved_player_state, filename)
-        print("Saved to file: " + filename)
+        logger.info("Saved character: %s", self.directory / filename)
         return filename
 
     def list_save_files(self):
-        return os.listdir(self.directory)
+        files = [path.name for path in self.directory.glob("*.json")
+                 if path.is_file() and not path.is_symlink()]
+        return sorted(files, key=lambda name: (0, int(Path(name).stem), name)
+                      if Path(name).stem.isascii() and Path(name).stem.isdecimal() else (1, 0, name))
 
     def _generate_filename_for_new_character(self):
-        existing_files = self.list_save_files()
-        if existing_files:
-            id_from_filename = lambda f: int(f.split(".json")[0])
-            existing_character_ids = [id_from_filename(f) for f in existing_files]
-            next_available_id = max(existing_character_ids) + 1
-        else:
-            next_available_id = 1
-        return str(next_available_id) + ".json"
+        # Reserve numeric names even when the entry is a directory or a damaged save.
+        existing_ids = [int(path.stem) for path in self.directory.glob("*.json")
+                        if path.stem.isascii() and path.stem.isdecimal()]
+        return f"{max(existing_ids, default=0) + 1}.json"

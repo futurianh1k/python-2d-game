@@ -15,6 +15,11 @@ jobs:
         with:
           python-version: '3.14'
           cache: pip
-      - run: python -m pip install --only-binary=:all: -r requirements.txt
+      - run: python -m pip install --only-binary=:all: -r requirements-dev.txt
       - run: python -W error -m compileall -q pythongame tests run.py map_editor.py
-      - run: python -m unittest discover -s tests -v
+      - run: python -m pytest --cov --cov-report=term --cov-report=xml:artifacts/coverage.xml --junitxml=artifacts/junit.xml --log-file=artifacts/pytest.log --log-file-level=DEBUG
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results-${{ matrix.os }}
+          path: artifacts/

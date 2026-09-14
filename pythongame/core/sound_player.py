@@ -1,5 +1,5 @@
 import random
-import warnings
+import logging
 from typing import Any, List, Dict
 
 import pygame
@@ -8,6 +8,7 @@ from pythongame.core.common import SoundId
 from pythongame.resources import resource_path
 
 _sounds_by_id: Dict[SoundId, List[Any]] = {}
+logger = logging.getLogger(__name__)
 
 muted = False
 
@@ -17,7 +18,7 @@ LOOPING_SOUNDS = [SoundId.FOOTSTEPS]
 def init_sound_player():
     global _sounds_by_id
     if pygame.mixer.get_init() is None:
-        warnings.warn("Audio device unavailable; continuing without sound.", RuntimeWarning, stacklevel=2)
+        logger.warning("Audio device unavailable; continuing without sound.")
         return
     if _sounds_by_id:
         raise Exception("Don't initialize sound player several times!")
@@ -101,6 +102,14 @@ def init_sound_player():
         SoundId.EVENT_PORTAL_ACTIVATED: load_sound_file('UI06.wav'),
         SoundId.FOOTSTEPS: load_sound_file('footsteps_loop.ogg', volume=1)
     }
+
+
+def shutdown_sound_player():
+    global muted
+    if pygame.mixer.get_init() is not None:
+        pygame.mixer.stop()
+    _sounds_by_id.clear()
+    muted = False
 
 
 def play_sound(sound_id: SoundId):
