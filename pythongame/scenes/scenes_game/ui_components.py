@@ -17,6 +17,7 @@ from pythongame.core.math import get_relative_pos_within_rect
 from pythongame.core.quests import Quest
 from pythongame.core.talents import TalentTierStatus
 from pythongame.core.view.render_util import DrawableArea, split_text_into_lines
+from pythongame.resources import FONT_DIR
 
 COLOR_BLACK = (0, 0, 0)
 COLOR_LIGHT_GRAY = (240, 240, 240)
@@ -35,7 +36,6 @@ COLOR_ITEM_TOOLTIP_HEADER_COMMON = (230, 230, 180)
 COLOR_ITEM_TOOLTIP_HEADER_RARE = (190, 150, 250)
 COLOR_ITEM_TOOLTIP_HEADER_UNIQUE = (250, 250, 150)
 
-DIR_FONTS = './resources/fonts/'
 
 TALENT_ICON_SIZE = (32, 32)
 
@@ -94,8 +94,8 @@ class Dialog:
         self._text_body = text_body
         self._options = options
         self._active_option_index = active_option_index
-        self._font_dialog = pygame.font.Font(DIR_FONTS + 'Merchant Copy.ttf', 24)
-        self._font_dialog_option_detail_body = pygame.font.Font(DIR_FONTS + 'Monaco.dfont', 12)
+        self._font_dialog = pygame.font.Font(FONT_DIR / 'Merchant Copy.ttf', 24)
+        self._font_dialog_option_detail_body = pygame.font.Font(FONT_DIR / 'Monaco.dfont', 12)
         self._portrait_image_size = portrait_image_size
         self._option_image_size = option_image_size
         self._shown = False
@@ -238,8 +238,8 @@ class TooltipGraphics:
                  title: str, details: List[DetailLine], bottom_left: Optional[Tuple[int, int]] = None,
                  bottom_right: Optional[Tuple[int, int]] = None, top_right: Optional[Tuple[int, int]] = None):
         self._ui_render = ui_render
-        self._font_header = pygame.font.Font(DIR_FONTS + 'Herculanum.ttf', 16)
-        self._font_details = pygame.font.Font(DIR_FONTS + 'Monaco.dfont', 12)
+        self._font_header = pygame.font.Font(FONT_DIR / 'Herculanum.ttf', 16)
+        self._font_details = pygame.font.Font(FONT_DIR / 'Monaco.dfont', 12)
         self._title_color = title_color
         self._title = title
         self._detail_lines: List[DetailLine] = []
@@ -535,7 +535,7 @@ class Checkbox(UiComponent):
     def __init__(self, ui_render: DrawableArea, rect: Rect, label: str, checked: bool, on_click: Callable[[bool], Any]):
         super().__init__(rect)
         self.ui_render = ui_render
-        self.font = pygame.font.Font(DIR_FONTS + 'Monaco.dfont', 12)
+        self.font = pygame.font.Font(FONT_DIR / 'Monaco.dfont', 12)
         self.label = label
         self.checked = checked
         self.tooltip = None
@@ -560,7 +560,7 @@ class Button(UiComponent):
         self._ui_render = ui_render
         self._text = text
         self.tooltip = None
-        self._font = pygame.font.Font(DIR_FONTS + 'Monaco.dfont', 12)
+        self._font = pygame.font.Font(FONT_DIR / 'Monaco.dfont', 12)
 
     def render(self):
         self._ui_render.rect(COLOR_BUTTON_OUTLINE, self.rect, 1)
@@ -576,7 +576,7 @@ class RadioButton(UiComponent):
         self.ui_render = ui_render
         self.text = text
         self.tooltip = None
-        self.font = pygame.font.Font(DIR_FONTS + 'Monaco.dfont', 12)
+        self.font = pygame.font.Font(FONT_DIR / 'Monaco.dfont', 12)
         self.enabled = False
 
     def render(self):

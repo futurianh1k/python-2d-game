@@ -1,1 +1,2 @@
-pygame == 1.9.4
+# pygame-ce provides the pygame module and CPython 3.14 wheels.
+pygame-ce==2.5.8

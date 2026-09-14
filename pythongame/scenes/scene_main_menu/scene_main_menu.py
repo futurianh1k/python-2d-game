@@ -9,8 +9,6 @@ from pythongame.scenes.scene_creating_world.scene_creating_world import InitFlag
 from pythongame.scenes.scene_factory import AbstractSceneFactory
 from pythongame.scenes.scene_main_menu.view_main_menu import MainMenuView, NUM_SHOWN_SAVE_FILES
 
-DIR_FONTS = './resources/fonts/'
-
 COLOR_BLACK = (0, 0, 0)
 
 

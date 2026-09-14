@@ -6,13 +6,13 @@ from pygame.rect import Rect
 from pythongame.core.common import HeroId, PortraitIconSprite
 from pythongame.core.game_data import HEROES
 from pythongame.core.view.render_util import split_text_into_lines, DrawableArea
+from pythongame.resources import FONT_DIR
 
 COLOR_WHITE = (250, 250, 250)
 COLOR_BLACK = (0, 0, 0)
 COLOR_HIGHLIGHTED_ICON = (250, 250, 150)
 PORTRAIT_ICON_SIZE = (100, 70)
 
-DIR_FONTS = './resources/fonts/'
 
 
 class PickingHeroView:
@@ -20,8 +20,8 @@ class PickingHeroView:
     def __init__(self, pygame_screen, images_by_portrait_sprite: Dict[PortraitIconSprite, Any]):
         self.screen_size = pygame_screen.get_size()
         self.screen_render = DrawableArea(pygame_screen)
-        self.font_large = pygame.font.Font(DIR_FONTS + 'Merchant Copy.ttf', 32)
-        self.font = pygame.font.Font(DIR_FONTS + 'Merchant Copy.ttf', 24)
+        self.font_large = pygame.font.Font(FONT_DIR / 'Merchant Copy.ttf', 32)
+        self.font = pygame.font.Font(FONT_DIR / 'Merchant Copy.ttf', 24)
         self.images_by_portrait_sprite = images_by_portrait_sprite
 
     def render(self, heroes: List[HeroId], selected_index: int):

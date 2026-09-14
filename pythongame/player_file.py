@@ -66,14 +66,14 @@ class SaveFileHandler:
             os.makedirs(self.directory)
 
     def load_player_state_from_json_file(self, filename: str) -> SavedPlayerState:
-        with open(self.directory + "/" + filename) as file:
-            json_data = json.loads(file.read())
+        with open(self.directory + "/" + filename, encoding="utf-8") as file:
+            json_data = json.load(file)
             return PlayerStateJson.deserialize(json_data)
 
     def _save_player_state_to_json_file(self, player_state: SavedPlayerState, filename: str):
         json_data = PlayerStateJson.serialize(player_state)
-        with open(self.directory + "/" + filename, 'w') as file:
-            file.write(json.dumps(json_data, indent=2))
+        with open(self.directory + "/" + filename, 'w', encoding="utf-8") as file:
+            json.dump(json_data, file, indent=2)
 
     def save_to_file(self, player_state: PlayerState, existing_save_file: Optional[str],
                      total_time_played_on_character: Millis) -> str:

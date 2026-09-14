@@ -1,9 +1,11 @@
 import random
+import warnings
 from typing import Any, List, Dict
 
 import pygame
 
 from pythongame.core.common import SoundId
+from pythongame.resources import resource_path
 
 _sounds_by_id: Dict[SoundId, List[Any]] = {}
 
@@ -14,6 +16,9 @@ LOOPING_SOUNDS = [SoundId.FOOTSTEPS]
 
 def init_sound_player():
     global _sounds_by_id
+    if pygame.mixer.get_init() is None:
+        warnings.warn("Audio device unavailable; continuing without sound.", RuntimeWarning, stacklevel=2)
+        return
     if _sounds_by_id:
         raise Exception("Don't initialize sound player several times!")
     _sounds_by_id = {
@@ -100,7 +105,7 @@ def init_sound_player():
 
 def play_sound(sound_id: SoundId):
     global muted
-    if muted:
+    if muted or pygame.mixer.get_init() is None:
         return
     if not _sounds_by_id:
         raise Exception("Initialize sound player before playing sounds!")
@@ -118,6 +123,8 @@ def play_sound(sound_id: SoundId):
 def stop_looping_sound(sound_id: SoundId):
     if sound_id not in LOOPING_SOUNDS:
         raise Exception("Only use this method for looping sounds!")
+    if pygame.mixer.get_init() is None:
+        return
     if not _sounds_by_id:
         raise Exception("Initialize sound player before playing sounds!")
     if sound_id in _sounds_by_id:
@@ -129,7 +136,7 @@ def stop_looping_sound(sound_id: SoundId):
 
 
 def load_sound_file(*filenames, volume: float = 1):
-    sounds = [pygame.mixer.Sound('./resources/sound/' + filename) for filename in filenames]
+    sounds = [pygame.mixer.Sound(resource_path('resources/sound') / filename) for filename in filenames]
     for sound in sounds:
         sound.set_volume(0.1 * volume)
     return sounds

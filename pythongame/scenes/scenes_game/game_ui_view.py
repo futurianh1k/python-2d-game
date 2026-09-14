@@ -23,6 +23,7 @@ from pythongame.scenes.scenes_game.ui_components import AbilityIcon, ConsumableI
 from pythongame.scenes.scenes_game.ui_events import TrySwitchItemInInventory, EventTriggeredFromUi, \
     DragItemBetweenInventorySlots, DropItemOnGround, DragConsumableBetweenInventorySlots, DropConsumableOnGround, \
     PickTalent, StartDraggingItemOrConsumable, SaveGame, ToggleSound, ToggleFullscreen, ToggleWindow
+from pythongame.resources import FONT_DIR
 
 COLOR_WHITE = (250, 250, 250)
 COLOR_BLACK = (0, 0, 0)
@@ -31,7 +32,6 @@ UI_ICON_SIZE = (32, 32)
 UI_ICON_BIG_SIZE = (36, 36)
 PORTRAIT_ICON_SIZE = (100, 70)
 
-DIR_FONTS = './resources/fonts/'
 
 HIGHLIGHT_CONSUMABLE_ACTION_DURATION = 120
 HIGHLIGHT_ABILITY_ACTION_DURATION = 120
@@ -91,17 +91,17 @@ class GameUiView:
         self.ability_key_labels = ability_key_labels
 
         # FONTS
-        self.font_splash_screen = pygame.font.Font(DIR_FONTS + 'Arial Rounded Bold.ttf', 64)
-        self.font_ui_stat_bar_numbers = pygame.font.Font(DIR_FONTS + 'Monaco.dfont', 12)
-        self.font_ui_money = pygame.font.Font(DIR_FONTS + 'Monaco.dfont', 12)
-        self.font_tooltip_details = pygame.font.Font(DIR_FONTS + 'Monaco.dfont', 12)
-        self.font_buttons = pygame.font.Font(DIR_FONTS + 'Monaco.dfont', 12)
-        self.font_stats = pygame.font.Font(DIR_FONTS + 'Monaco.dfont', 9)
-        self.font_buff_texts = pygame.font.Font(DIR_FONTS + 'Monaco.dfont', 12)
-        self.font_message = pygame.font.Font(DIR_FONTS + 'Monaco.dfont', 14)
-        self.font_debug_info = pygame.font.Font(DIR_FONTS + 'Monaco.dfont', 12)
-        self.font_ui_icon_keys = pygame.font.Font(DIR_FONTS + 'Courier New Bold.ttf', 12)
-        self.font_level = pygame.font.Font(DIR_FONTS + 'Courier New Bold.ttf', 11)
+        self.font_splash_screen = pygame.font.Font(FONT_DIR / 'Arial Rounded Bold.ttf', 64)
+        self.font_ui_stat_bar_numbers = pygame.font.Font(FONT_DIR / 'Monaco.dfont', 12)
+        self.font_ui_money = pygame.font.Font(FONT_DIR / 'Monaco.dfont', 12)
+        self.font_tooltip_details = pygame.font.Font(FONT_DIR / 'Monaco.dfont', 12)
+        self.font_buttons = pygame.font.Font(FONT_DIR / 'Monaco.dfont', 12)
+        self.font_stats = pygame.font.Font(FONT_DIR / 'Monaco.dfont', 9)
+        self.font_buff_texts = pygame.font.Font(FONT_DIR / 'Monaco.dfont', 12)
+        self.font_message = pygame.font.Font(FONT_DIR / 'Monaco.dfont', 14)
+        self.font_debug_info = pygame.font.Font(FONT_DIR / 'Monaco.dfont', 12)
+        self.font_ui_icon_keys = pygame.font.Font(FONT_DIR / 'Courier New Bold.ttf', 12)
+        self.font_level = pygame.font.Font(FONT_DIR / 'Courier New Bold.ttf', 11)
 
         # IMAGES
         self.images_by_ui_sprite = images_by_ui_sprite

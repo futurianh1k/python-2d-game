@@ -10,6 +10,7 @@ from pythongame.core.entity_creation import create_npc, create_money_pile_on_gro
 from pythongame.core.game_state import NonPlayerCharacter, Wall, Portal, DecorationEntity, \
     MoneyPileOnGround, ItemOnGround, ConsumableOnGround, Chest, Shrine, DungeonEntrance, GameWorldState
 from pythongame.core.world_entity import WorldEntity
+from pythongame.resources import resource_path
 
 
 class MapEditorConfig:
@@ -30,8 +31,8 @@ class MapData:
 
 
 def load_map_from_json_file(map_file_path: str) -> MapData:
-    with open(map_file_path) as map_file:
-        json_data = json.loads(map_file.read())
+    with resource_path(map_file_path).open(encoding="utf-8") as map_file:
+        json_data = json.load(map_file)
         return create_map_from_json(json_data)
 
 
@@ -45,8 +46,8 @@ def save_map_to_json_file(map_data: MapData, map_file: str):
 
 
 def write_json_to_file(json_data, map_file: str):
-    with open(map_file, 'w') as map_file:
-        map_file.write(json.dumps(json_data, indent=2))
+    with resource_path(map_file).open('w', encoding="utf-8") as map_file:
+        json.dump(json_data, map_file, indent=2)
 
 
 class MapJson:

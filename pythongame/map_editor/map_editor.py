@@ -27,6 +27,7 @@ from pythongame.map_editor.map_editor_world_entity import MapEditorWorldEntity
 from pythongame.map_file import save_map_to_json_file, load_map_from_json_file, create_map_from_json, MapData, \
     MapEditorConfig
 from pythongame.register_game_data import register_all_game_data
+from pythongame.resources import resource_path
 
 MAP_DIR = "resources/maps/"
 
@@ -77,7 +78,7 @@ HERO_ID = HeroId.MAGE
 
 class MapEditor:
     def __init__(self, map_file_name: Optional[str]):
-        self.map_file_path = MAP_DIR + (map_file_name or "map1.json")
+        self.map_file_path = str(resource_path(MAP_DIR) / (map_file_name or "map1.json"))
 
         possible_grid_cell_sizes = [GRID_CELL_SIZE, GRID_CELL_SIZE * 2]
         grid_cell_size_index = 0
@@ -476,7 +477,10 @@ class MapEditor:
 
 
 def main(map_file_name: Optional[str]):
-    MapEditor(map_file_name)
+    try:
+        MapEditor(map_file_name)
+    finally:
+        pygame.quit()
 
 
 # TODO Convert these functions to methods

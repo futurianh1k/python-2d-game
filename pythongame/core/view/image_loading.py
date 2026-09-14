@@ -4,6 +4,7 @@ import pygame
 from pygame.rect import Rect
 
 from pythongame.core.common import Direction, Sprite, UiIconSprite, PortraitIconSprite
+from pythongame.resources import resource_path
 
 
 class SpriteInitializer:
@@ -18,7 +19,7 @@ class SpriteSheet(object):
         self.sheet = None
 
     def _load_sheet(self):
-        self.sheet = pygame.image.load(self.file_path).convert_alpha()
+        self.sheet = pygame.image.load(resource_path(self.file_path)).convert_alpha()
 
     def image_at(self, rect: Rect):
         if self.sheet is None:
@@ -92,7 +93,7 @@ def load_and_scale_directional_sprites(
 
 
 def _load_and_scale_sprite(image_file_path: str, scaling_size: Tuple[int, int]):
-    image = pygame.image.load(image_file_path).convert_alpha()
+    image = pygame.image.load(resource_path(image_file_path)).convert_alpha()
     return pygame.transform.scale(image, scaling_size)
 
 

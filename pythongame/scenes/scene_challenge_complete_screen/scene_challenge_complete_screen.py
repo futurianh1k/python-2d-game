@@ -4,9 +4,9 @@ import pygame
 
 from pythongame.core.common import Millis, AbstractScene, SceneTransition
 from pythongame.core.view.render_util import DrawableArea
+from pythongame.resources import FONT_DIR
 
 COLOR_BLACK = (0, 0, 0)
-DIR_FONTS = './resources/fonts/'
 
 
 def get_time_str(millis: Millis):
@@ -21,7 +21,7 @@ class ChallengeCompleteScreenScene(AbstractScene):
     def __init__(self, pygame_screen, total_time_played: Millis):
         self.screen_size = pygame_screen.get_size()
         self.screen_render = DrawableArea(pygame_screen)
-        self.font = pygame.font.Font(DIR_FONTS + 'Merchant Copy.ttf', 24)
+        self.font = pygame.font.Font(FONT_DIR / 'Merchant Copy.ttf', 24)
         self.time_since_start = Millis(0)
         self.total_time_played = total_time_played
 

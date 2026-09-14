@@ -7,6 +7,7 @@ from pythongame.core.common import PortraitIconSprite, HeroId
 from pythongame.core.game_data import HEROES, HeroData
 from pythongame.core.view.render_util import DrawableArea
 from pythongame.player_file import SavedPlayerState
+from pythongame.resources import FONT_DIR
 
 NUM_SHOWN_SAVE_FILES = 3
 
@@ -17,7 +18,6 @@ COLOR_RECT = (70, 70, 70)
 COLOR_HIGHLIGHTED_RECT = (250, 250, 150)
 PORTRAIT_ICON_SIZE = (100, 70)
 
-DIR_FONTS = './resources/fonts/'
 
 
 class MainMenuView:
@@ -25,7 +25,7 @@ class MainMenuView:
     def __init__(self, pygame_screen, images_by_portrait_sprite: Dict[PortraitIconSprite, Any]):
         self._screen_size = pygame_screen.get_size()
         self._screen_render = DrawableArea(pygame_screen)
-        self._font = pygame.font.Font(DIR_FONTS + 'Merchant Copy.ttf', 24)
+        self._font = pygame.font.Font(FONT_DIR / 'Merchant Copy.ttf', 24)
         self._images_by_portrait_sprite = images_by_portrait_sprite
 
     def render(self, saved_characters: List[SavedPlayerState], selected_option_index: int, first_shown_index: int):

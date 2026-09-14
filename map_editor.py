@@ -4,8 +4,13 @@ import argparse
 
 from pythongame.map_editor import map_editor
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--map')
-args = parser.parse_args()
+def cli():
+    parser = argparse.ArgumentParser(description="Launch the map editor.")
+    parser.add_argument('--map')
+    args = parser.parse_args()
 
-map_editor.main(args.map)
+    map_editor.main(args.map)
+
+
+if __name__ == '__main__':
+    cli()

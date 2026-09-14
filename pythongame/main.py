@@ -125,7 +125,7 @@ class Main:
                 self.save_file_handler.save_to_file(game_state.player_state, None, Millis(0))
             else:
                 print("Failed to save character to file as backup!")
-            raise e
+            raise
 
     def _main_loop(self):
         while True:
@@ -160,9 +160,7 @@ class Main:
         self.pygame_screen = self.setup_screen()
 
     def setup_screen(self):
-        flags = pygame.DOUBLEBUF
-        if self.fullscreen:
-            flags = flags | pygame.FULLSCREEN | pygame.HWSURFACE
+        flags = pygame.FULLSCREEN if self.fullscreen else 0
         return pygame.display.set_mode(SCREEN_SIZE, flags)
 
     @staticmethod
@@ -177,5 +175,8 @@ class Main:
 
 def start(map_file_name: Optional[str], chosen_hero_id: Optional[str], hero_start_level: Optional[int],
           start_money: Optional[int], save_file_name: Optional[str], fullscreen: bool):
-    main = Main(map_file_name, chosen_hero_id, hero_start_level, start_money, save_file_name, fullscreen)
-    main.main_loop()
+    try:
+        main = Main(map_file_name, chosen_hero_id, hero_start_level, start_money, save_file_name, fullscreen)
+        main.main_loop()
+    finally:
+        pygame.quit()

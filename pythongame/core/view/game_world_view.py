@@ -13,12 +13,12 @@ from pythongame.core.view.render_util import DrawableArea, split_text_into_lines
 from pythongame.core.visual_effects import VisualLine, VisualCircle, VisualRect, VisualText, VisualSprite, VisualCross, \
     VisualParticleSystem
 from pythongame.core.world_entity import WorldEntity
+from pythongame.resources import FONT_DIR
 
 COLOR_BACKGROUND = (88 + 30, 72 + 30, 40 + 30)
 COLOR_BACKGROUND_LINES = (93 + 30, 77 + 30, 45 + 30)
 COLOR_RED = (250, 0, 0)
 RENDER_WORLD_COORDINATES = False
-DIR_FONTS = './resources/fonts/'
 
 
 class EntityActionTextStyle(Enum):
@@ -51,12 +51,12 @@ class GameWorldView:
         self.camera_size = camera_size
         self.screen_size = screen_size
 
-        self.font_npc_action = pygame.font.Font(DIR_FONTS + 'Monaco.dfont', 12)
-        self.font_debug_info = pygame.font.Font(DIR_FONTS + 'Arial Rounded Bold.ttf', 19)
-        self.font_visual_text_small = pygame.font.Font(DIR_FONTS + 'Courier New Bold.ttf', 12)
-        self.font_visual_text = pygame.font.Font(DIR_FONTS + 'Courier New Bold.ttf', 14)
-        self.font_visual_text_large = pygame.font.Font(DIR_FONTS + 'Courier New Bold.ttf', 16)
-        self.font_quest_giver_mark = pygame.font.Font(DIR_FONTS + 'Courier New Bold.ttf', 28)
+        self.font_npc_action = pygame.font.Font(FONT_DIR / 'Monaco.dfont', 12)
+        self.font_debug_info = pygame.font.Font(FONT_DIR / 'Arial Rounded Bold.ttf', 19)
+        self.font_visual_text_small = pygame.font.Font(FONT_DIR / 'Courier New Bold.ttf', 12)
+        self.font_visual_text = pygame.font.Font(FONT_DIR / 'Courier New Bold.ttf', 14)
+        self.font_visual_text_large = pygame.font.Font(FONT_DIR / 'Courier New Bold.ttf', 16)
+        self.font_quest_giver_mark = pygame.font.Font(FONT_DIR / 'Courier New Bold.ttf', 28)
 
         self.images_by_sprite: Dict[Sprite, Dict[Direction, List[ImageWithRelativePosition]]] = images_by_sprite
 

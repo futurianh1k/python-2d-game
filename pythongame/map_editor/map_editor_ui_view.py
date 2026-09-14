@@ -18,6 +18,7 @@ from pythongame.dungeon_generator import Grid
 from pythongame.map_editor.map_editor_world_entity import MapEditorWorldEntity
 from pythongame.scenes.scenes_game.ui_components import RadioButton, Checkbox, Minimap, MapEditorIcon, TooltipGraphics, \
     Button
+from pythongame.resources import FONT_DIR
 
 COLOR_WHITE = (250, 250, 250)
 COLOR_BLACK = (0, 0, 0)
@@ -26,7 +27,6 @@ PORTRAIT_ICON_SIZE = (100, 70)
 
 RENDER_WORLD_COORDINATES = False
 
-DIR_FONTS = './resources/fonts/'
 
 MAP_EDITOR_UI_ICON_SIZE = (32, 32)
 
@@ -143,8 +143,8 @@ class MapEditorView:
         self._screen_render = DrawableArea(pygame_screen)
         self._ui_render = DrawableArea(pygame_screen, self._translate_ui_position_to_screen)
 
-        self._font_debug_info = pygame.font.Font(DIR_FONTS + 'Courier New Bold.ttf', 12)
-        self._font_ui_icon_keys = pygame.font.Font(DIR_FONTS + 'Courier New Bold.ttf', 12)
+        self._font_debug_info = pygame.font.Font(FONT_DIR / 'Courier New Bold.ttf', 12)
+        self._font_ui_icon_keys = pygame.font.Font(FONT_DIR / 'Courier New Bold.ttf', 12)
         w_tab_button = 110
         self._tab_buttons_by_entity_type = {
             EntityTab.ADVANCED: RadioButton(self._ui_render, Rect(220, 10, w_tab_button, 20), "ADVANCED (C)"),

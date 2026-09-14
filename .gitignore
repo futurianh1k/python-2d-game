@@ -1,6 +1,9 @@
 .idea
 __pycache__
 .DS_Store
+.venv*/
+venv/
+python=3.6/
 
 # dist and build are created by pyinstaller as part of generating an executable
 dist

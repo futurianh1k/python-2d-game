@@ -83,6 +83,8 @@ class CreatingWorldScene(AbstractScene):
 
         register_game_engine_observers(game_engine, self.ui_view)
         register_game_state_observers(game_state, self.ui_view, include_player_state=True)
+        # Replace the previous character's icons before restoring levels emits cooldown updates.
+        game_engine.on_abilities_updated()
 
         if saved_player_state:
             game_engine.gain_levels(saved_player_state.level - 1)
