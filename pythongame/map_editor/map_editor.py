@@ -263,6 +263,8 @@ class MapEditor:
         self.ui_view.update_wall_positions(wall_positions)
 
     def save(self):
+        # 스마트 그리드를 끈 맵에는 Grid 객체가 없으므로 JSON null로 보존한다.
+        # 파일 교체와 실패 시 원본 보존은 map_file → json_files에서 공통 처리한다.
         grid_string = self.grid.serialize() if self.grid is not None else None
         game_world = self.game_state.game_world
         map_data = MapData(game_world, self.config, grid_string, game_world.player_entity.get_position())

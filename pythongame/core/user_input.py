@@ -111,6 +111,8 @@ class PlayingUserInputHandler:
         actions = []
         for event in events:
             if event.type == pygame.WINDOWFOCUSLOST:
+                # 포커스가 다른 창으로 넘어간 뒤에는 KEYUP을 받지 못할 수 있다.
+                # 이동/스킬/Shift를 한 번에 비워 복귀 후 자동 이동이나 연속 시전을 막는다.
                 self.forget_held_down_keys()
             if event.type == pygame.KEYDOWN:
                 if event.key in PYGAME_MOVEMENT_KEYS:

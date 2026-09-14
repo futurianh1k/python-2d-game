@@ -145,19 +145,52 @@ python run.py --disable-fullscreen
 
 There may be more flags to use for debugging purposes.
 
+Runtime messages go to the console. To also keep a UTF-8 log file:
+```sh
+python run.py --disable-fullscreen --log-file logs/game.log --log-level DEBUG
+python map_editor.py --map test.json --log-file logs/editor.log
+```
+Logs rotate at 1 MiB with up to three backups. File operations and crashes record
+paths and tracebacks without dumping save contents. A malformed save is skipped
+in the menu with a warning; an explicitly requested invalid `--file` fails with
+an error. Saves and maps use temporary files followed by atomic replacement, so
+a failed write before replacement preserves the previous file.
+
 ## Verification
 
-Run the integration tests in the Python 3.14 environment:
+Install the development dependencies, then run pytest in Python 3.14:
 ```sh
-python -m unittest discover -s tests -v
+python -m pip install -r requirements-dev.txt
+python -m pytest
+python -m pytest -m unit
+python -m pytest -m integration
 ```
+
+To collect compilation checks, dependency checks, pytest results, coverage,
+logs, and hashes verifying that real saves/resources were unchanged:
+```sh
+python scripts/verify.py
+```
+Results are written to `artifacts/`, including `validation-summary.json`,
+`junit.xml`, `coverage.xml`, `coverage.json`, `coverage-html/`, and `pytest.log`.
+This directory is ignored by Git. CI uploads its JUnit, coverage, and log
+artifacts even when tests fail.
 
 Tests use SDL's dummy video/audio drivers, so they work without a display or
 speakers. They exercise real asset loading and rendering, hero movement and
 abilities, pause/resume, fullscreen switching, save loading (including older
-JSON files), map editing, map serialization, and dungeon generation. Each
-scenario runs in a temporary directory to isolate saves and check resource
-paths. GitHub Actions runs the suite on Linux, Windows, and macOS.
+JSON files), map editing, map serialization, and dungeon generation. Unit tests
+also cover malformed data, failed writes, crash backups, CLI boundaries, input
+focus loss, and log rotation. Each test runs in a temporary directory. GitHub
+Actions is configured for Linux, Windows, and macOS; local verification only
+certifies the platform on which it ran.
+
+The diagnosis, TC matrix, fixture policy, detailed code comments, and recorded
+validation results are documented in Korean:
+
+- [Diagnosis and refactoring](docs/quality/diagnosis.md)
+- [Test-case design and pytest structure](docs/quality/test-design.md)
+- [Validation results and limitations](docs/quality/validation.md)
 
 ## Profiling the game:
 To profile the game code, run:

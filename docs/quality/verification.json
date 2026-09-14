@@ -1,0 +1,132 @@
+{
+  "started_utc": "2026-09-14T06:08:29.648146+00:00",
+  "finished_utc": "2026-09-14T06:09:38.430993+00:00",
+  "python": "3.14.4",
+  "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+  "dependencies": {
+    "pygame-ce": "2.5.8",
+    "pytest": "9.1.1",
+    "pytest-cov": "7.1.0",
+    "coverage": "7.16.1"
+  },
+  "pytest": {
+    "tests": 119,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "coverage": {
+    "covered_lines": 9422,
+    "num_statements": 13115,
+    "percent_covered": 65.9025787965616,
+    "percent_covered_display": "65.90",
+    "missing_lines": 3693,
+    "excluded_lines": 0,
+    "percent_statements_covered": 71.84140297369424,
+    "percent_statements_covered_display": "71.84",
+    "num_branches": 2590,
+    "num_partial_branches": 240,
+    "covered_branches": 928,
+    "missing_branches": 1662,
+    "percent_branches_covered": 35.83011583011583,
+    "percent_branches_covered_display": "35.83"
+  },
+  "protected_files": 270,
+  "protected_files_unchanged": true,
+  "changed_protected_paths": [],
+  "success": true,
+  "checks": {
+    "compile": 0,
+    "dependencies": 0,
+    "tests": 0
+  },
+  "module_coverage": {
+    "pythongame/json_files.py": {
+      "covered_lines": 37,
+      "num_statements": 37,
+      "percent_covered": 97.43589743589743,
+      "percent_covered_display": "97.44",
+      "missing_lines": 0,
+      "excluded_lines": 0,
+      "percent_statements_covered": 100.0,
+      "percent_statements_covered_display": "100.00",
+      "num_branches": 2,
+      "num_partial_branches": 1,
+      "covered_branches": 1,
+      "missing_branches": 1,
+      "percent_branches_covered": 50.0,
+      "percent_branches_covered_display": "50.00"
+    },
+    "pythongame/player_file.py": {
+      "covered_lines": 102,
+      "num_statements": 102,
+      "percent_covered": 100.0,
+      "percent_covered_display": "100.00",
+      "missing_lines": 0,
+      "excluded_lines": 0,
+      "percent_statements_covered": 100.0,
+      "percent_statements_covered_display": "100.00",
+      "num_branches": 32,
+      "num_partial_branches": 0,
+      "covered_branches": 32,
+      "missing_branches": 0,
+      "percent_branches_covered": 100.0,
+      "percent_branches_covered_display": "100.00"
+    },
+    "pythongame/logging_config.py": {
+      "covered_lines": 26,
+      "num_statements": 26,
+      "percent_covered": 96.875,
+      "percent_covered_display": "96.88",
+      "missing_lines": 0,
+      "excluded_lines": 0,
+      "percent_statements_covered": 100.0,
+      "percent_statements_covered_display": "100.00",
+      "num_branches": 6,
+      "num_partial_branches": 1,
+      "covered_branches": 5,
+      "missing_branches": 1,
+      "percent_branches_covered": 83.33333333333333,
+      "percent_branches_covered_display": "83.33"
+    },
+    "pythongame/main.py": {
+      "covered_lines": 117,
+      "num_statements": 133,
+      "percent_covered": 83.44827586206897,
+      "percent_covered_display": "83.45",
+      "missing_lines": 16,
+      "excluded_lines": 0,
+      "percent_statements_covered": 87.96992481203007,
+      "percent_statements_covered_display": "87.97",
+      "num_branches": 12,
+      "num_partial_branches": 2,
+      "covered_branches": 4,
+      "missing_branches": 8,
+      "percent_branches_covered": 33.333333333333336,
+      "percent_branches_covered_display": "33.33"
+    },
+    "pythongame/map_file.py": {
+      "covered_lines": 130,
+      "num_statements": 133,
+      "percent_covered": 97.74436090225564,
+      "percent_covered_display": "97.74",
+      "missing_lines": 3,
+      "excluded_lines": 0,
+      "percent_statements_covered": 97.74436090225564,
+      "percent_statements_covered_display": "97.74",
+      "num_branches": 0,
+      "num_partial_branches": 0,
+      "covered_branches": 0,
+      "missing_branches": 0,
+      "percent_branches_covered": 100.0,
+      "percent_branches_covered_display": "100.00"
+    }
+  },
+  "build_smoke": {
+    "pyinstaller": "6.22.2",
+    "duration_seconds": 3,
+    "exit_code": 0,
+    "lifecycle_log_checked": true,
+    "platform": "Linux only"
+  }
+}

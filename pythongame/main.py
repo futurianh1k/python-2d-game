@@ -118,6 +118,11 @@ class Main:
         self.scene: AbstractScene = StartingProgramScene(self.scene_factory, cmd_flags, self.save_file_handler)
 
     def main_loop(self):
+        """최초 충돌의 traceback을 보존하면서 가능한 경우 새 파일로 비상 저장한다.
+
+        백업 저장도 실패할 수 있으므로 별도 try 블록을 쓴다. 바깥의 bare raise는
+        백업 예외가 아닌 최초 게임 예외를 다시 발생시켜 진단 정보를 유지한다.
+        """
         try:
             self._main_loop()
         except Exception:
@@ -125,9 +130,11 @@ class Main:
             game_state = getattr(self.scene, 'game_state', None)
             if game_state is not None:
                 try:
+                    # 일시정지 장면은 실행 장면을 감싸므로 누적 시간은 내부 장면에서 가져온다.
+                    active_scene = getattr(self.scene, 'playing_scene', self.scene)
                     filename = self.save_file_handler.save_to_file(
                         game_state.player_state, None,
-                        getattr(self.scene, 'total_time_played_on_character', Millis(0)),
+                        getattr(active_scene, 'total_time_played_on_character', Millis(0)),
                     )
                     logger.info("Crash backup saved: %s", filename)
                 except Exception:

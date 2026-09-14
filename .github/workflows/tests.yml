@@ -9,6 +9,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -19,6 +20,7 @@ jobs:
       - run: python -W error -m compileall -q pythongame tests run.py map_editor.py
       - run: python -m pytest --cov --cov-report=term --cov-report=xml:artifacts/coverage.xml --junitxml=artifacts/junit.xml --log-file=artifacts/pytest.log --log-file-level=DEBUG
       - uses: actions/upload-artifact@v4
+        # 실패한 실행도 JUnit/로그를 남겨 로컬에서 재현할 수 있도록 항상 업로드한다.
         if: always()
         with:
           name: test-results-${{ matrix.os }}

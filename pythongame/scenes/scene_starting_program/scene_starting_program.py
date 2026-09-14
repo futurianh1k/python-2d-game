@@ -50,6 +50,7 @@ class StartingProgramScene(AbstractScene):
                     saved_player_state=saved_player_state,
                     hero_start_level=None,
                     start_money=None,
+                    # 이후 저장이 새 번호를 만들지 않고 불러온 파일을 갱신하도록 유지한다.
                     character_file=self.cmd_flags.save_file_name)
                 return SceneTransition(self.scene_factory.creating_world_scene(flags))
 

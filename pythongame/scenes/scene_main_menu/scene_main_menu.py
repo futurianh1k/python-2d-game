@@ -27,6 +27,8 @@ class MainMenuScene(AbstractScene):
         self._files = []
         self._saved_characters: List[SavedPlayerState] = []
         for filename in save_file_handler.list_save_files():
+            # 성공적으로 읽은 파일과 표시할 캐릭터를 함께 추가해야 선택 인덱스가
+            # 원본 파일명과 일치한다. 손상된 파일 자체는 삭제하거나 수정하지 않는다.
             try:
                 saved = save_file_handler.load_player_state_from_json_file(filename)
             except (OSError, ValueError):

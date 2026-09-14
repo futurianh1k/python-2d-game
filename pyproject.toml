@@ -1,8 +1,10 @@
 [tool.pytest.ini_options]
+# 프로젝트 밖 임시 cwd에서도 import가 안정적이도록 수집 루트를 명시한다.
 minversion = "9.0"
 testpaths = ["tests"]
 pythonpath = ["."]
 addopts = "-ra --strict-markers --strict-config"
+# 경고를 무시하는 전역 필터를 두지 않는다. 예기치 않은 deprecated API도 실패로 드러낸다.
 filterwarnings = ["error"]
 markers = [
     "unit: isolated logic, persistence, and logging contracts",
@@ -12,6 +14,8 @@ markers = [
 log_format = "%(levelname)s %(name)s: %(message)s"
 
 [tool.coverage.run]
+# 줄 실행 여부와 분기 도달 여부를 함께 기록한다. 결과는 전체 코드 기준이며
+# subprocess CLI의 별도 인터프리터 실행은 커버리지 합산에 포함하지 않는다.
 branch = true
 source = ["pythongame", "run", "map_editor"]
 

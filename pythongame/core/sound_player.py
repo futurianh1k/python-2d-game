@@ -18,6 +18,8 @@ LOOPING_SOUNDS = [SoundId.FOOTSTEPS]
 def init_sound_player():
     global _sounds_by_id
     if pygame.mixer.get_init() is None:
+        # 오디오 부재는 게임 진행을 막는 예외가 아니다. -W error 환경에서도 실행되도록
+        # Python 경고 대신 운영 로그의 WARNING으로 기록한다.
         logger.warning("Audio device unavailable; continuing without sound.")
         return
     if _sounds_by_id:
@@ -105,6 +107,11 @@ def init_sound_player():
 
 
 def shutdown_sound_player():
+    """SDL 종료 전에 사운드를 멈추고 캐시/음소거 상태를 초기화한다.
+
+    같은 인터프리터에서 게임을 다시 실행할 때 종료된 mixer의 Sound 인스턴스를
+    재사용하지 않게 한다. pytest fixture와 실제 start()의 finally가 함께 사용한다.
+    """
     global muted
     if pygame.mixer.get_init() is not None:
         pygame.mixer.stop()
