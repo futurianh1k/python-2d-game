@@ -1,12 +1,13 @@
 [tool.pytest.ini_options]
 # 프로젝트 밖 임시 cwd에서도 import가 안정적이도록 수집 루트를 명시한다.
 minversion = "9.0"
-testpaths = ["tests"]
+testpaths = ["tests", "tests_istqb_foundation"]
 pythonpath = ["."]
 addopts = "-ra --strict-markers --strict-config"
 # 경고를 무시하는 전역 필터를 두지 않는다. 예기치 않은 deprecated API도 실패로 드러낸다.
 filterwarnings = ["error"]
 markers = [
+    "istqb_foundation: CTFL technique-based tests; see docs/istqb_foundation_test_plan.md",
     "unit: isolated logic, persistence, and logging contracts",
     "integration: real pygame assets, scenes, and file round trips",
     "process: CLI checks in a fresh Python process",

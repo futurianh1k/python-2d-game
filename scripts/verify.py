@@ -62,7 +62,7 @@ def main() -> int:
     output.mkdir(exist_ok=True)
     before = protected_file_hashes()
     checks = [
-        run_step("compile", ["-W", "error", "-m", "compileall", "-q", "pythongame", "tests", "scripts",
+        run_step("compile", ["-W", "error", "-m", "compileall", "-q", "pythongame", "tests", "tests_istqb_foundation", "scripts",
                              "run.py", "map_editor.py"], output),
         run_step("dependencies", ["-m", "pip", "--disable-pip-version-check", "--no-cache-dir", "check"], output),
         run_step("tests", ["-m", "pytest", "--cov", "--cov-report=term", "--cov-report=html",
